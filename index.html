@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universidad Central — Portal Académico</title>
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="emblem">🎓</div>
+    <h1>Universidad Central</h1>
+    <span>Portal Académico</span>
+  </div>
+  <div class="sidebar-user">
+    <div class="avatar">CG</div>
+    <div class="sidebar-user-info">
+      <p>Carlos A. Gómez</p>
+      <small>2021-0834 · Estudiante</small>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <a href="index.html"        class="nav-link active"><span class="icon">⊞</span> Dashboard</a>
+
+    <div class="nav-section-label">Académico</div>
+    <a href="matriculas.html"   class="nav-link"><span class="icon">📋</span> Matrículas</a>
+    <a href="notas.html"        class="nav-link"><span class="icon">📊</span> Notas</a>
+    <a href="horarios.html"     class="nav-link"><span class="icon">📅</span> Horarios</a>
+
+    <div class="nav-section-label">Administrativo</div>
+    <a href="pagos.html"        class="nav-link"><span class="icon">💳</span> Pagos <span class="nav-badge">1</span></a>
+    <a href="comunicacion.html" class="nav-link"><span class="icon">💬</span> Mensajes <span class="nav-badge">3</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="#" class="nav-link"><span class="icon">⚙</span> Configuración</a>
+    <a href="#" class="nav-link"><span class="icon">↩</span> Cerrar Sesión</a>
+  </div>
+</aside>
+
+<!-- Main content -->
+<main class="main-content">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="page-title">
+      <h2>Dashboard</h2>
+      <p id="today-date"></p>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-outline btn-sm" onclick="showToast('Notificaciones al día ✓', 'info')">🔔 Notificaciones</button>
+      <button class="btn btn-primary btn-sm" onclick="location.href='matriculas.html'">+ Matricular Materias</button>
+    </div>
+  </div>
+
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <h3>¡Bienvenido, Carlos! 👋</h3>
+    <p>Ingeniería de Sistemas · Universidad Central de Colombia</p>
+    <div class="semester-badge">📚 Periodo 2025-I &nbsp;|&nbsp; 6to Semestre &nbsp;|&nbsp; 19 Créditos inscritos</div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="quick-links">
+    <a href="matriculas.html" class="quick-link">
+      <div class="icon" style="background:rgba(201,168,76,0.12)">📋</div>
+      <span>Matrículas</span>
+    </a>
+    <a href="notas.html" class="quick-link">
+      <div class="icon" style="background:rgba(76,165,201,0.12)">📊</div>
+      <span>Notas</span>
+    </a>
+    <a href="horarios.html" class="quick-link">
+      <div class="icon" style="background:rgba(76,175,130,0.12)">📅</div>
+      <span>Horarios</span>
+    </a>
+    <a href="pagos.html" class="quick-link">
+      <div class="icon" style="background:rgba(224,92,92,0.12)">💳</div>
+      <span>Pagos</span>
+    </a>
+    <a href="comunicacion.html" class="quick-link">
+      <div class="icon" style="background:rgba(138,150,171,0.12)">💬</div>
+      <span>Mensajes</span>
+    </a>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="grid-4 mb-24">
+    <div class="stat-card">
+      <div class="stat-icon gold">📚</div>
+      <div>
+        <div class="stat-value" id="cnt-materias">0</div>
+        <div class="stat-label">Materias</div>
+        <div class="stat-delta up">↑ 2 vs semestre ant.</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">⭐</div>
+      <div>
+        <div class="stat-value" id="cnt-promedio">0</div>
+        <div class="stat-label">Promedio</div>
+        <div class="stat-delta up">↑ 0.2 vs semestre ant.</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div>
+        <div class="stat-value" id="cnt-creditos">0</div>
+        <div class="stat-label">Créditos Acum.</div>
+        <div class="stat-delta up">↑ 19 este semestre</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">💳</div>
+      <div>
+        <div class="stat-value">1</div>
+        <div class="stat-label">Pagos Pendientes</div>
+        <div class="stat-delta down">⚠ Vence en 5 días</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="grid-2 gap-20">
+
+    <!-- Progreso Materias -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Progreso Académico</div>
+          <div class="card-subtitle">Avance por materia — 2025-I</div>
+        </div>
+        <a href="notas.html" class="btn btn-ghost btn-sm">Ver notas →</a>
+      </div>
+      <div id="progress-list"></div>
+    </div>
+
+    <!-- Col derecha -->
+    <div class="flex-col gap-20">
+
+      <!-- Anuncios -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Anuncios</div>
+            <div class="card-subtitle">Comunicados recientes</div>
+          </div>
+          <span class="badge badge-info">3 nuevos</span>
+        </div>
+        <div class="announcement">
+          <div class="announcement-tag">Académico</div>
+          <p>Semana de exámenes parciales del 28 de mayo al 3 de junio.</p>
+          <small>Hace 2 horas</small>
+        </div>
+        <div class="announcement">
+          <div class="announcement-tag">Financiero</div>
+          <p>Fecha límite de pago de matrícula: 15 de mayo de 2025.</p>
+          <small>Ayer</small>
+        </div>
+        <div class="announcement">
+          <div class="announcement-tag">Bienestar</div>
+          <p>Jornada de orientación vocacional — Lunes 13 de mayo, 2pm, Auditorio Principal.</p>
+          <small>Hace 3 días</small>
+        </div>
+      </div>
+
+      <!-- Actividad Reciente -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Actividad Reciente</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:var(--success)"></div>
+          <div>
+            <p>Nota registrada en <strong>Bases de Datos</strong> — 4.2</p>
+            <small>Hoy, 9:14 am</small>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:var(--info)"></div>
+          <div>
+            <p>Mensaje de <strong>Dr. Ramírez</strong>: "Recordatorio parcial"</p>
+            <small>Ayer, 3:45 pm</small>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:var(--gold)"></div>
+          <div>
+            <p>Pago recibido — Matrícula 2025-I</p>
+            <small>12 May, 11:00 am</small>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot" style="background:var(--danger)"></div>
+          <div>
+            <p>Recordatorio: Pago seguro estudiantil pendiente</p>
+            <small>10 May, 8:00 am</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+
+</body>
+</html>
