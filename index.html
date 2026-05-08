@@ -4,10 +4,136 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Universidad Central — Portal Académico</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Dashboard-specific ── */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--navy-light) 0%, rgba(201,168,76,0.12) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::before {
+      content: '🎓';
+      position: absolute;
+      right: 36px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 80px;
+      opacity: 0.12;
+    }
+    .welcome-banner h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .welcome-banner p { font-size: 14px; color: var(--text-muted); }
+    .welcome-banner .semester-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 500;
+    }
 
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .quick-link {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      text-align: center;
+      text-decoration: none;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .quick-link:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+    .quick-link .icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .quick-link span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .quick-link:hover span { color: var(--gold); }
 
-  
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .activity-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .activity-item p { font-size: 13.5px; line-height: 1.4; }
+    .activity-item small { font-size: 11px; color: var(--text-muted); }
+
+    .announcement {
+      background: rgba(76,165,201,0.08);
+      border: 1px solid rgba(76,165,201,0.2);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .announcement:last-child { margin-bottom: 0; }
+    .announcement p { font-size: 13.5px; line-height: 1.4; }
+    .announcement small { font-size: 11px; color: var(--text-muted); }
+    .announcement-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--info);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .subject-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .subject-progress:last-child { border-bottom: none; }
+    .subject-progress .name { flex: 1; font-size: 13px; }
+    .subject-progress .pct { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--gold); width: 36px; text-align: right; }
+
+    @media (max-width: 1100px) { .quick-links { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 768px)  { .quick-links { grid-template-columns: repeat(2,1fr); } }
+  </style>
 </head>
 <body>
 
@@ -210,6 +336,47 @@
 
 </main>
 
+<script src="app.js"></script>
+<script>
+  // Date
+  document.getElementById('today-date').textContent =
+    new Intl.DateTimeFormat('es-CO', { weekday:'long', day:'2-digit', month:'long', year:'numeric' }).format(new Date());
 
+  // Counters
+  setTimeout(() => {
+    animateCounter(document.getElementById('cnt-materias'), 6);
+    animateCounter(document.getElementById('cnt-promedio'), 38); // 3.8
+    animateCounter(document.getElementById('cnt-creditos'), 98);
+  }, 300);
+
+  // Fix promedio display
+  setTimeout(() => {
+    const el = document.getElementById('cnt-promedio');
+    el.textContent = '3.8';
+  }, 1600);
+
+  // Subject progress
+  const subjectsProgress = [
+    { name: 'Estructuras de Datos',   pct: 72, color: 'var(--success)' },
+    { name: 'Cálculo Diferencial',     pct: 55, color: 'var(--info)' },
+    { name: 'Bases de Datos',          pct: 80, color: 'var(--gold)' },
+    { name: 'Ingeniería de Software',  pct: 60, color: 'var(--success)' },
+    { name: 'Redes de Computadores',   pct: 45, color: 'var(--danger)' },
+    { name: 'Electiva: IA y ML',      pct: 90, color: 'var(--success)' },
+  ];
+  const list = document.getElementById('progress-list');
+  subjectsProgress.forEach(s => {
+    list.innerHTML += `
+      <div class="subject-progress">
+        <div class="name text-sm">${s.name}</div>
+        <div style="flex:2">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${s.pct}%;background:${s.color}"></div>
+          </div>
+        </div>
+        <div class="pct">${s.pct}%</div>
+      </div>`;
+  });
+</script>
 </body>
 </html>
