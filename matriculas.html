@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrículas — Universidad Central</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .steps { display: flex; gap: 0; margin-bottom: 32px; }
+    .step {
+      flex: 1; display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; background: var(--card-bg);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .step:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
+    .step.active { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+    .step.done   { border-color: rgba(76,175,130,0.3); }
+    .step-num {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--navy); border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .step.active .step-num { border-color: var(--gold); color: var(--gold); }
+    .step.done .step-num   { border-color: var(--success); color: var(--success); background: rgba(76,175,130,0.1); }
+    .step-text p { font-size: 13px; font-weight: 600; }
+    .step-text small { font-size: 11px; color: var(--text-muted); }
+
+    .subject-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 16px;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .subject-card:hover { border-color: var(--gold); }
+    .subject-card.selected {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.07);
+    }
+    .subject-card .checkbox {
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 12px;
+      transition: all var(--transition);
+    }
+    .subject-card.selected .checkbox {
+      background: var(--gold); border-color: var(--gold); color: var(--navy);
+    }
+    .subject-info { flex: 1; }
+    .subject-info h4 { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .subject-info p { font-size: 12px; color: var(--text-muted); }
+    .subject-credits {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px; color: var(--gold);
+      background: rgba(201,168,76,0.1);
+      padding: 4px 10px; border-radius: 8px;
+    }
+
+    .credit-summary {
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .credit-bar { flex: 1; }
+    .credit-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .credit-counts { display: flex; gap: 24px; }
+    .credit-count .num { font-family: 'DM Mono', monospace; font-size: 24px; color: var(--gold); }
+    .credit-count .lbl { font-size: 11px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="emblem">🎓</div>
+    <h1>Universidad Central</h1>
+    <span>Portal Académico</span>
+  </div>
+  <div class="sidebar-user">
+    <div class="avatar">CG</div>
+    <div class="sidebar-user-info">
+      <p>Carlos A. Gómez</p>
+      <small>2021-0834 · Estudiante</small>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <a href="index.html" class="nav-link"><span class="icon">⊞</span> Dashboard</a>
+    <div class="nav-section-label">Académico</div>
+    <a href="matriculas.html" class="nav-link active"><span class="icon">📋</span> Matrículas</a>
+    <a href="notas.html" class="nav-link"><span class="icon">📊</span> Notas</a>
+    <a href="horarios.html" class="nav-link"><span class="icon">📅</span> Horarios</a>
+    <div class="nav-section-label">Administrativo</div>
+    <a href="pagos.html" class="nav-link"><span class="icon">💳</span> Pagos <span class="nav-badge">1</span></a>
+    <a href="comunicacion.html" class="nav-link"><span class="icon">💬</span> Mensajes <span class="nav-badge">3</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="#" class="nav-link"><span class="icon">⚙</span> Configuración</a>
+    <a href="#" class="nav-link"><span class="icon">↩</span> Cerrar Sesión</a>
+  </div>
+</aside>
+
+<main class="main-content">
+  <div class="topbar">
+    <div class="page-title">
+      <h2>Matrículas</h2>
+      <p>Inscripción de asignaturas — Periodo 2025-I</p>
+    </div>
+    <div class="topbar-actions">
+      <span class="badge badge-warning">📅 Plazo: 20 May 2025</span>
+      <button class="btn btn-primary" onclick="confirmarMatricula()">Confirmar Matrícula</button>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps mb-24">
+    <div class="step done"><div class="step-num">✓</div><div class="step-text"><p>Verificación</p><small>Estado académico OK</small></div></div>
+    <div class="step active"><div class="step-num">2</div><div class="step-text"><p>Selección</p><small>Elige tus materias</small></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text"><p>Confirmación</p><small>Revisa y confirma</small></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-text"><p>Pago</p><small>Liquidación</small></div></div>
+  </div>
+
+  <!-- Credit Summary -->
+  <div class="credit-summary mb-24">
+    <div class="credit-bar">
+      <div class="credit-label">Créditos seleccionados</div>
+      <div class="progress-bar" style="height:10px">
+        <div class="progress-fill" id="credit-prog" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="credit-counts">
+      <div class="credit-count"><div class="num" id="sel-credits">0</div><div class="lbl">Inscritos</div></div>
+      <div class="credit-count"><div class="num" style="color:var(--text-muted)">21</div><div class="lbl">Máximo</div></div>
+      <div class="credit-count"><div class="num" id="sel-count" style="color:var(--info)">0</div><div class="lbl">Materias</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-20">
+    <!-- Available subjects -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Oferta Académica</div>
+          <div class="card-subtitle">Materias disponibles para tu programa</div>
+        </div>
+        <div class="search-box">
+          <span class="icon">🔍</span>
+          <input type="text" class="form-control" id="search-subjects" placeholder="Buscar..." style="width:180px">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-primary" onclick="filterByType('all')">Todas</button>
+        <button class="btn btn-sm btn-outline" onclick="filterByType('obligatoria')">Obligatorias</button>
+        <button class="btn btn-sm btn-outline" onclick="filterByType('electiva')">Electivas</button>
+      </div>
+
+      <div id="subjects-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- Selected & Info -->
+    <div class="flex-col gap-20">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Materias Inscritas</div>
+          <span class="badge badge-warning" id="count-badge">0 materias</span>
+        </div>
+        <div id="selected-list">
+          <div class="empty-state">
+            <div class="icon">📋</div>
+            <p>Selecciona materias del panel izquierdo</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Historial de Matrículas</div></div>
+        <table>
+          <thead><tr><th>Periodo</th><th>Créditos</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>2024-II</td><td>18</td><td><span class="badge badge-success">Aprobado</span></td></tr>
+            <tr><td>2024-I</td><td>19</td><td><span class="badge badge-success">Aprobado</span></td></tr>
+            <tr><td>2023-II</td><td>17</td><td><span class="badge badge-success">Aprobado</span></td></tr>
+            <tr><td>2023-I</td><td>16</td><td><span class="badge badge-success">Aprobado</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="modal-confirmar">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Confirmar Matrícula</div>
+      <button class="modal-close" onclick="closeModal('modal-confirmar')">✕</button>
+    </div>
+    <p class="text-muted mb-16" style="font-size:14px">Estás a punto de confirmar tu matrícula para el periodo <strong class="text-gold">2025-I</strong>. Esta acción no se puede deshacer.</p>
+    <div id="confirm-summary" style="margin-bottom:20px"></div>
+    <div style="display:flex;gap:12px">
+      <button class="btn btn-outline" onclick="closeModal('modal-confirmar')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:1" onclick="finalizeMatricula()">✅ Confirmar y Continuar</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  const allSubjects = [
+    { id:1, name:'Estructuras de Datos',   code:'ISI-301', credits:4, type:'obligatoria', teacher:'Dr. Ramírez', prereq:'Prog. I', schedule:'L-Mi 8-10am' },
+    { id:2, name:'Cálculo Diferencial',     code:'MAT-201', credits:3, type:'obligatoria', teacher:'Dra. López',  prereq:'Ninguno', schedule:'M-J 10-12m' },
+    { id:3, name:'Bases de Datos',          code:'ISI-302', credits:4, type:'obligatoria', teacher:'Mg. Torres',  prereq:'ISI-201', schedule:'L-Mi 2-4pm' },
+    { id:4, name:'Ingeniería de Software',  code:'ISI-303', credits:3, type:'obligatoria', teacher:'Dr. Vargas',  prereq:'ISI-201', schedule:'M-J 8-10am' },
+    { id:5, name:'Redes de Computadores',   code:'ISI-304', credits:3, type:'obligatoria', teacher:'Mg. Herrera', prereq:'ISI-203', schedule:'V 7-11am' },
+    { id:6, name:'Electiva: IA y ML',      code:'ELE-401', credits:2, type:'electiva',    teacher:'Dr. Castro',  prereq:'MAT-301', schedule:'J 2-4pm' },
+    { id:7, name:'Ética y Sociedad Digital',code:'HUM-101', credits:2, type:'electiva',   teacher:'Mg. Pineda',  prereq:'Ninguno', schedule:'Mi 4-6pm' },
+    { id:8, name:'Gestión de Proyectos',    code:'ADM-201', credits:3, type:'electiva',   teacher:'Dr. Molina',  prereq:'Ninguno', schedule:'L 4-7pm' },
+  ];
+
+  let selected = new Set([1,2,3,4,5,6]); // pre-selected
+  let currentFilter = 'all';
+
+  function renderSubjects(filter = currentFilter) {
+    const q = document.getElementById('search-subjects').value.toLowerCase();
+    const list = document.getElementById('subjects-list');
+    const filtered = allSubjects.filter(s =>
+      (filter === 'all' || s.type === filter) &&
+      (s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q))
+    );
+    list.innerHTML = filtered.map(s => `
+      <div class="subject-card ${selected.has(s.id)?'selected':''}" onclick="toggleSubject(${s.id})">
+        <div class="checkbox">${selected.has(s.id)?'✓':''}</div>
+        <div class="subject-info">
+          <h4>${s.name}</h4>
+          <p>${s.code} · ${s.teacher} · ${s.schedule} · Prereq: ${s.prereq}</p>
+        </div>
+        <span class="badge ${s.type==='electiva'?'badge-info':'badge-muted'}">${s.type}</span>
+        <div class="subject-credits">${s.credits} cr.</div>
+      </div>`).join('');
+  }
+
+  function toggleSubject(id) {
+    const sub = allSubjects.find(s => s.id === id);
+    const totalCredits = [...selected].reduce((a,i) => a + allSubjects.find(s=>s.id===i).credits, 0);
+    if (selected.has(id)) {
+      selected.delete(id);
+    } else {
+      if (totalCredits + sub.credits > 21) { showToast('Máximo 21 créditos permitidos', 'error'); return; }
+      selected.add(id);
+    }
+    renderSubjects();
+    renderSelected();
+    updateCredits();
+  }
+
+  function renderSelected() {
+    const list = document.getElementById('selected-list');
+    const badge = document.getElementById('count-badge');
+    badge.textContent = `${selected.size} materias`;
+    if (selected.size === 0) {
+      list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>Selecciona materias del panel izquierdo</p></div>`;
+      return;
+    }
+    list.innerHTML = [...selected].map(id => {
+      const s = allSubjects.find(x=>x.id===id);
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <div style="flex:1"><p style="font-size:13px;font-weight:600">${s.name}</p><p class="text-muted text-sm">${s.code}</p></div>
+        <span class="font-mono text-gold text-sm">${s.credits} cr.</span>
+        <button class="btn btn-danger btn-sm" onclick="toggleSubject(${s.id})">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  function updateCredits() {
+    const total = [...selected].reduce((a,i) => a + allSubjects.find(s=>s.id===i).credits, 0);
+    document.getElementById('sel-credits').textContent = total;
+    document.getElementById('sel-count').textContent = selected.size;
+    document.getElementById('credit-prog').style.width = (total/21*100) + '%';
+  }
+
+  function filterByType(type) {
+    currentFilter = type;
+    renderSubjects(type);
+  }
+
+  function confirmarMatricula() {
+    if (selected.size === 0) { showToast('Selecciona al menos una materia', 'error'); return; }
+    const total = [...selected].reduce((a,i) => a + allSubjects.find(s=>s.id===i).credits, 0);
+    document.getElementById('confirm-summary').innerHTML = `
+      <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:16px">
+        ${[...selected].map(id => { const s=allSubjects.find(x=>x.id===id);
+          return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px">
+            <span>${s.name}</span><span class="text-gold font-mono">${s.credits} cr.</span></div>`; }).join('')}
+        <div style="display:flex;justify-content:space-between;padding-top:12px;font-weight:700">
+          <span>Total</span><span class="text-gold font-mono">${total} créditos</span></div>
+      </div>`;
+    openModal('modal-confirmar');
+  }
+
+  function finalizeMatricula() {
+    closeModal('modal-confirmar');
+    showToast('¡Matrícula confirmada exitosamente!', 'success');
+    setTimeout(() => location.href='pagos.html', 1500);
+  }
+
+  document.getElementById('search-subjects').addEventListener('input', () => renderSubjects());
+
+  renderSubjects();
+  renderSelected();
+  updateCredits();
+</script>
+</body>
+</html>
